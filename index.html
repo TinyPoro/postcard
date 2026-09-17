@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bạn có muốn làm người yêu của mình không?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Itim&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fdf6ec;
+    --pink:#f7a8b8;
+    --pink-dark:#e8748f;
+    --blue:#8ec9e8;
+    --blue-dark:#5aa9d6;
+    --ink:#6b4a3f;
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0;
+    min-height:100%;
+    background: radial-gradient(circle at 20% 20%, #fff7ee, #f3e2cf 60%, #e9d2b8);
+    font-family:'Be Vietnam Pro', sans-serif;
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:24px;
+  }
+  .wood{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:
+      repeating-linear-gradient(100deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 6px),
+      linear-gradient(135deg,#c99a6b,#8a5a34);
+    opacity:0.35;
+  }
+  .card{
+    position:relative;
+    background:var(--cream);
+    border-radius:22px;
+    max-width:560px;
+    width:100%;
+    padding:38px 30px 34px;
+    box-shadow: 0 25px 60px rgba(90,50,20,0.35), 0 2px 0 rgba(255,255,255,0.6) inset;
+    border:3px dashed var(--pink);
+    transform:rotate(-1.2deg);
+    overflow:hidden;
+  }
+  .deco{
+    position:absolute;
+    font-size:26px;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,0.12));
+    user-select:none;
+    pointer-events:none;
+  }
+  .deco.heart1{ top:14px; left:18px; font-size:30px; transform:rotate(-12deg);}
+  .deco.heart2{ top:10px; right:120px; font-size:18px;}
+  .deco.heart3{ bottom:190px; left:14px; font-size:22px;}
+  .deco.heart4{ top:150px; right:24px; font-size:16px;}
+  .deco.cloud{ top:8px; right:16px; font-size:38px;}
+  .deco.flower{ top:180px; right:14px; font-size:30px;}
+  .deco.envelope{ bottom:14px; right:18px; font-size:32px;}
+  .deco.cat{ bottom:6px; left:10px; font-size:64px;}
+
+  h1{
+    font-family:'Itim', cursive;
+    text-align:center;
+    font-size:clamp(22px,5vw,30px);
+    line-height:1.35;
+    margin:6px 0 26px;
+    padding:0 10px;
+  }
+
+  .choices{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+    position:relative;
+    min-height:150px;
+  }
+
+  .choice-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#fff;
+    border-radius:16px;
+    padding:14px 22px;
+    font-family:'Itim', cursive;
+    font-size:22px;
+    cursor:pointer;
+    user-select:none;
+    transition: transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 4px 0 rgba(0,0,0,0.05);
+  }
+  .choice-box .box{
+    width:22px;
+    height:22px;
+    border-radius:6px;
+    border:2px solid currentColor;
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+  }
+  #yesBtn{
+    border:2px solid var(--pink-dark);
+    color:var(--pink-dark);
+  }
+  #yesBtn:hover{ transform:translateY(-2px); box-shadow:0 6px 0 rgba(0,0,0,0.08); }
+  #yesBtn small{ font-size:16px; margin-left:2px; }
+
+  #noSlot{
+    border:2px solid var(--blue-dark);
+    color:var(--blue-dark);
+    visibility:hidden;
+  }
+  #noBtn{
+    border:2px solid var(--blue-dark);
+    color:var(--blue-dark);
+    position:fixed;
+    z-index:80;
+    transition: left .18s cubic-bezier(.3,1.4,.5,1), top .18s cubic-bezier(.3,1.4,.5,1);
+  }
+
+  .hint{
+    text-align:center;
+    margin-top:26px;
+    font-size:15px;
+    color:#9a7a63;
+    min-height:20px;
+    transition:opacity .2s ease;
+  }
+
+  .success{
+    display:none;
+    text-align:center;
+    font-family:'Itim', cursive;
+  }
+  .success.show{ display:block; }
+  .choices.hidden{ display:none; }
+  .success h2{
+    font-size:clamp(24px,6vw,32px);
+    color:var(--pink-dark);
+    margin:10px 0;
+  }
+  .success p{
+    font-family:'Be Vietnam Pro', sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    max-width:420px;
+    margin:0 auto;
+  }
+
+  .burst{
+    position:fixed;
+    top:0; left:0;
+    font-size:22px;
+    pointer-events:none;
+    z-index:100;
+    animation: fly 1.4s ease-out forwards;
+  }
+  @keyframes fly{
+    0%{ transform:translate(0,0) scale(0.6); opacity:1; }
+    100%{ transform: var(--fly-end) scale(1.2); opacity:0; }
+  }
+
+  @media (max-width:420px){
+    .card{ padding:30px 18px 26px; }
+    .choice-box{ padding:12px 16px; font-size:19px; }
+  }
+</style>
+</head>
+<body>
+<div class="wood"></div>
+
+<div class="card" id="card">
+  <span class="deco heart1">💗</span>
+  <span class="deco heart2">💕</span>
+  <span class="deco heart3">💗</span>
+  <span class="deco heart4">💕</span>
+  <span class="deco cloud">☁️</span>
+  <span class="deco flower">🌼</span>
+  <span class="deco envelope">💌</span>
+  <span class="deco cat">🐱</span>
+
+  <h1>Bạn có muốn làm<br>người yêu của mình<br>không? 💕</h1>
+
+  <div class="choices" id="choices">
+    <div class="choice-box" id="yesBtn">
+      <span class="box"></span> YES <small>♥</small>
+    </div>
+    <div class="choice-box" id="noSlot" aria-hidden="true">
+      <span class="box">☐</span> NO ☹
+    </div>
+  </div>
+
+  <div class="hint" id="hint">Di chuột (hoặc chạm) vào nút No thử xem 👀</div>
+
+  <div class="success" id="success">
+    <h2>Yayyy! 💖</h2>
+    <p id="successText">Cảm ơn vì đã đồng ý làm người yêu của mình!<br>Từ giờ mỗi ngày của mình sẽ vui hơn rất nhiều vì có bạn ♥</p>
+  </div>
+</div>
+
+<div class="choice-box" id="noBtn">
+  <span class="box"></span> NO ☹
+</div>
+
+<script>
+const card = document.getElementById('card');
+const noBtn = document.getElementById('noBtn');
+const noSlot = document.getElementById('noSlot');
+const yesBtn = document.getElementById('yesBtn');
+const hint = document.getElementById('hint');
+const choices = document.getElementById('choices');
+const success = document.getElementById('success');
+
+const runMessages = [
+  "Ơ kìa, No chạy mất rồi 🙈",
+  "Nhanh tay lên, No trốn giỏi lắm đó!",
+  "Thử bao nhiêu lần cũng vậy thôi á 😆",
+  "No chỉ dành cho người... không có thật thôi!",
+  "Hihi, chọn Yes cho nhanh đi mà 💗",
+  "No hôm nay xin phép nghỉ việc luôn rồi!",
+  "Có đuổi theo cả ngày cũng không bắt được đâu~",
+  "Sao cứ thích làm khó nút No vậy nè 🥹"
+];
+let runCount = 0;
+let lastDodge = 0;
+let dodged = false;           // đã né lần nào chưa
+const DODGE_COOLDOWN = 220;   // ms giữa 2 lần né, tránh giật liên tục
+const TRIGGER_DIST = 90;      // chuột tới gần trong khoảng này thì né
+const DODGE_MIN = 120;        // luôn né xa hơn TRIGGER_DIST để không bị né dồn dập
+const DODGE_MAX = 190;
+
+function syncToSlot(){
+  const rect = noSlot.getBoundingClientRect();
+  noBtn.style.width = rect.width + 'px';
+  noBtn.style.height = rect.height + 'px';
+  noBtn.style.left = rect.left + 'px';
+  noBtn.style.top = rect.top + 'px';
+}
+
+function dodgeFrom(cx, cy){
+  const now = Date.now();
+  if(now - lastDodge < DODGE_COOLDOWN) return;
+  lastDodge = now;
+  dodged = true;
+
+  const rect = noBtn.getBoundingClientRect();
+  const bx = rect.left + rect.width / 2;
+  const by = rect.top + rect.height / 2;
+
+  // né theo hướng ngược lại con trỏ, lệch ngẫu nhiên một chút cho tự nhiên
+  let angle = Math.atan2(by - cy, bx - cx);
+  if(!isFinite(angle)) angle = Math.random() * Math.PI * 2;
+  angle += (Math.random() - 0.5) * 1.0;
+
+  const dist = DODGE_MIN + Math.random() * (DODGE_MAX - DODGE_MIN);
+  const margin = 12;
+  let nx = bx + Math.cos(angle) * dist - rect.width / 2;
+  let ny = by + Math.sin(angle) * dist - rect.height / 2;
+  nx = Math.min(Math.max(nx, margin), window.innerWidth - rect.width - margin);
+  ny = Math.min(Math.max(ny, margin), window.innerHeight - rect.height - margin);
+
+  noBtn.style.left = nx + 'px';
+  noBtn.style.top = ny + 'px';
+
+  runCount++;
+  hint.textContent = runMessages[Math.min(runCount - 1, runMessages.length - 1) % runMessages.length];
+}
+
+function distanceToNoBtn(x, y){
+  const rect = noBtn.getBoundingClientRect();
+  const bx = rect.left + rect.width / 2;
+  const by = rect.top + rect.height / 2;
+  return Math.hypot(x - bx, y - by);
+}
+
+// Đặt nút No đúng ngay vị trí bên cạnh Yes lúc mới vào trang
+syncToSlot();
+window.addEventListener('load', syncToSlot);
+window.addEventListener('resize', () => {
+  // luôn cập nhật lại kích thước theo ô giữ chỗ, vì padding/cỡ chữ có đổi ở màn hình nhỏ
+  const slotRect = noSlot.getBoundingClientRect();
+  noBtn.style.width = slotRect.width + 'px';
+  noBtn.style.height = slotRect.height + 'px';
+
+  if(!dodged){
+    noBtn.style.left = slotRect.left + 'px';
+    noBtn.style.top = slotRect.top + 'px';
+    return;
+  }
+  // đã né rồi thì chỉ kéo lại cho nằm trong màn hình khi thu nhỏ cửa sổ
+  const rect = noBtn.getBoundingClientRect();
+  const maxX = window.innerWidth - rect.width - 12;
+  const maxY = window.innerHeight - rect.height - 12;
+  noBtn.style.left = Math.min(parseFloat(noBtn.style.left) || 0, Math.max(maxX, 12)) + 'px';
+  noBtn.style.top = Math.min(parseFloat(noBtn.style.top) || 0, Math.max(maxY, 12)) + 'px';
+});
+
+// Theo dõi con trỏ trên toàn trang: chuột tới gần là né, chưa cần bấm trúng
+window.addEventListener('mousemove', (e) => {
+  if(distanceToNoBtn(e.clientX, e.clientY) < TRIGGER_DIST){
+    dodgeFrom(e.clientX, e.clientY);
+  }
+});
+
+// Mobile: ngón tay rê tới gần cũng né tương tự
+window.addEventListener('touchmove', (e) => {
+  const t = e.touches[0];
+  if(!t) return;
+  if(distanceToNoBtn(t.clientX, t.clientY) < TRIGGER_DIST + 20){
+    dodgeFrom(t.clientX, t.clientY);
+  }
+}, { passive:true });
+
+noBtn.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  const t = e.touches[0];
+  dodgeFrom(t.clientX, t.clientY);
+}, { passive:false });
+
+// Chốt chặn cuối: nếu vẫn lỡ bấm trúng thì cũng né tiếp, không tính
+noBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  const rect = noBtn.getBoundingClientRect();
+  dodgeFrom(rect.left + rect.width / 2, rect.top + rect.height / 2);
+});
+
+function burstHearts(){
+  const emojis = ['💖','💕','✨','💗','❤️'];
+  for(let i=0;i<26;i++){
+    const span = document.createElement('span');
+    span.className = 'burst';
+    span.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    const startX = window.innerWidth/2 + (Math.random()-0.5)*120;
+    const startY = window.innerHeight/2 + (Math.random()-0.5)*40;
+    const endX = (Math.random()-0.5) * 500;
+    const endY = -Math.random()*500 - 150;
+    span.style.left = startX + 'px';
+    span.style.top = startY + 'px';
+    span.style.setProperty('--fly-end', `translate(${endX}px, ${endY}px)`);
+    span.style.animationDelay = (Math.random()*0.3) + 's';
+    document.body.appendChild(span);
+    setTimeout(() => span.remove(), 1800);
+  }
+}
+
+yesBtn.addEventListener('click', () => {
+  yesBtn.querySelector('.box').textContent = '☑';
+  choices.classList.add('hidden');
+  hint.style.display = 'none';
+  success.classList.add('show');
+  burstHearts();
+  setTimeout(burstHearts, 400);
+});
+</script>
+</body>
+</html>
